@@ -9,19 +9,19 @@ def main():
         description='Welcome to Forensics Email Analyzer',
         epilog="This program was coded by Tri Nguyen and Ryan Salinas!!")
 
-        #-t for target
-        parser.add_argument('search',help='Enter keyword(s) to search in dataset')
+        
+        parser.add_argument('search', nargs='+', help='Enter keyword(s) to search in dataset')
         args=parser.parse_args()
 
-        search = str(args.search).split(" ")
+        search_str = str(' '.join(args.search)).split(" ")
         
-        for key in search:
-            print(key)
-
+        for search in search_str:
+            print (search)
+        
+        # if no argument are given, print help screen and exit
         if len(sys.argv)==1:
              parser.print_help()
              parser.exit()
-
 
     except KeyboardInterrupt:
         print(Style.RESET_ALL, end ="")
