@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import argparse
 import sys
+from collections import OrderedDict
 
 def main():
     try:
@@ -14,8 +15,10 @@ def main():
         args=parser.parse_args()
 
         search_str = str(' '.join(args.search)).split(" ")
+
+        search_clean = list(OrderedDict.fromkeys(search_str))
         
-        for search in search_str:
+        for search in search_clean:
             print (search)
         
         # if no argument are given, print help screen and exit
