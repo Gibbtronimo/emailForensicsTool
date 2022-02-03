@@ -15,7 +15,10 @@ def main():
         args=parser.parse_args()
 
         search_str = str(' '.join(args.search)).split(" ")
-
+        
+        for i in range(len(search_str)):
+            search_str[i] = search_str[i].lower()
+        
         search_clean = list(OrderedDict.fromkeys(search_str))
         
         for search in search_clean:
