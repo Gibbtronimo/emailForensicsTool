@@ -29,8 +29,8 @@ def main():
         
         for search in search_clean:
             print (search)
-        
-        rootDir='/home/kali/Documents/Digital_Forensics/Enron2mbox/enron'
+#       New function - walks through entire directory given in mbox format
+        rootDir=str(input("Enter directory: "))
         for (root,dirs,files) in os.walk(rootDir, topdown=True):
             inbox=files
             mymail = mailbox.mbox(inbox, factory=BytesParser(policy=default).parse)
