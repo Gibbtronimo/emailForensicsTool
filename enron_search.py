@@ -40,27 +40,36 @@ def main():
         epilog="This program was coded by Tri Nguyen and Ryan Salinas!!")
 
         
-        parser.add_argument('-tS', '--term_search', nargs='+', help='Enter keyword(s) to search in dataset')
+        parser.add_argument('-tS', '--term_search',  nargs='+', help='Enter keyword(s) to search in dataset')
+        parser.add_argument('-aS', '--address_search', nargs='+', help='obtain all the emails sent and received by a given by the user')
 
-       # parser.add_argument('-aS', '--address_search', nargs='+', help='obtain all the emails sent and received by a given by the user')
-
-      #  parser.add_argument('-iS', '--interaction_search', nargs='+', help='obtain all the emails exchanged by two people regardless of who initiated the communication in the first place')
+        parser.add_argument('-iS', '--interaction_search', nargs='+', help='obtain all the emails exchanged by two people regardless of who initiated the communication in the first place')
         args=parser.parse_args()
-
-
-
+        
+        search_str =[]
+        a_search=[]
+        int_search=[]
         #tokenize the input given by the user using space delimeter
-        search_str = str(' '.join(args.term_search)).split(" ") 
-        """
-        address_search =  str(' '.join(args.address_search)).split(" ")
+        if (args is None):
+            parser.print_help()
+            exit(1)
 
-        interact_search =  str(' '.join(args.interaction_search)).split(" ")
 
-        if(address_search != None):
-            print("address search: ", address_search)
-        elif(interact_search != None):
-         print("interact search: ", address_search)
-         """
+        if(args.term_search != None):
+            search_str = str(' '.join(args.term_search)).split(" ") 
+        
+        if(args.address_search != None):
+            a_search = str(' '.join(args.address_search)).split(" ") 
+
+        if(args.interaction_search != None):
+            int_search = str(' '.join(args.interaction_search)).split(" ")
+
+        if(len(a_search) > 0):
+            print("address search: ", a_search)
+        elif(len(int_search) >0):
+            print("interact search: ", int_search)
+
+
         for i in range(len(search_str)):
             search_str[i] = search_str[i].lower()
         
