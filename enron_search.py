@@ -7,6 +7,8 @@ import re
 from collections import OrderedDict
 from email.parser import BytesParser
 from email.policy import default
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 count=0; #global variable to count the total occurence of search strings
 
@@ -23,9 +25,34 @@ def term_search(self, inboxName, search_clean):
                 print("INBOX:", inboxName)
                 print("-------------------------")
                 for email in self:
-                    print("%d. <%s>, %s" %(count, email['from'], email['date']))
+                    print("%d. <%s>, %s" %(count +1, email['from'], email['date']))
                     count+=1;
                 print("-------------------------\n")
+
+
+def address_search(self, inboxName, search_clean):
+    global count
+    cLast_name = str(search_clean[0])[0] + search_clean[1]
+    first_dot_lastName =search_clean[0] + '.' + search_clean[1]
+
+    #print("first_dot_lastName",first_dot_lastName)
+    #print("cLast_name", cLast_name)
+    for email in self:
+        
+        #if(re.match(first_dot_lastName, str(email['from'])) or re.match(cLast_name,str(email['from']))):
+        if (first_dot_lastName in str(email['from']) or cLast_name in str(email['from'])):
+            print("%d. <%s>" %(count +1, email['from']))
+            count+=1;
+        if(str(email['to']).count(",") == 0):
+            if (first_dot_lastName in str(email['to']) or cLast_name in str(email['to'])):
+                print("%d. <%s>" %(count +1, email['to']))
+                count+=1;
+            
+        #and re.match(search_clean[1], str(email['from'])) ):
+
+
+
+
 
 # Function obtain all the emails exchanged by two people
 # regardless of who initiated the communication in the first place
@@ -39,12 +66,13 @@ def interactive_search(self, inboxName, search_clean):
     #print("to: ",search_clean[1])
     for email in self:
          if(email['from'] == search_clean[0] and  email['to'] == search_clean[1] ):
-             print("%d. <%s> -> <%s> [%s] %s\n" %(count, email['from'],email['to'], email['subject'],email['date']))
+             print("%d. <%s> -> <%s> [%s] %s\n" %(count+1, email['from'],email['to'], email['subject'],email['date']))
              count+=1;
 
          elif(email['from'] == search_clean[1] and  email['to'] == search_clean[0] ):
-             print("%d. <%s> -> <%s> [Subject:%s] %s\n" %(count, email['to'],email['from'], email['subject'],email['date']))
+             print("%d. <%s> -> <%s> [Subject:%s] %s\n" %(count +1, email['to'],email['from'], email['subject'],email['date']))
              count+=1;
+
 # Function read parse the mbox and return the body of each mbox mailbox  as a string
 def read_email_payload(self):
         message = self
@@ -110,8 +138,11 @@ def main():
                 mbox = mailbox.mbox(inbox,create=False)
                 if (args.term_search is not None): 
                     term_search(mbox, inbox, search_clean)
+                elif (args.address_search is not None):
+                    address_search(mbox, inbox, search_clean)
                 elif (args.interaction_search is not None):
                     interactive_search(mbox, inbox, search_clean)
+
 
         global count
         print("result found:",count) #print the total results
