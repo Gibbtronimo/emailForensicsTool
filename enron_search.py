@@ -30,31 +30,32 @@ def term_search(self, inboxName, search_clean):
                 print("-------------------------\n")
 
 
+
+#Function print out all all the emails assosiated with a name 
 def address_search(self, inboxName, search_clean):
     global count
+    found_list =[]
+    email_num=0
+    fullname = str(search_clean[0]) +" " +  str(search_clean[1])
     cLast_name = str(search_clean[0])[0] + search_clean[1]
     first_dot_lastName =search_clean[0] + '.' + search_clean[1]
 
-    #print("first_dot_lastName",first_dot_lastName)
-    #print("cLast_name", cLast_name)
     for email in self:
-        
-        #if(re.match(first_dot_lastName, str(email['from'])) or re.match(cLast_name,str(email['from']))):
-        if (first_dot_lastName in str(email['from']) or cLast_name in str(email['from'])):
-            print("%d. <%s>" %(count +1, email['from']))
+        if (search_clean[0] in str(email['x-from']) and search_clean[1] in str(email['x-from'])):
+            unique_email(email['from'], found_list)
+        elif (first_dot_lastName in str(email['from']) or cLast_name in str(email['from'])):
+            unique_email(email['from'], found_list)     
+        if(len(found_list) != email_num):
+            print("%d. <%s>" %(count +1, found_list[len(found_list)-1]))
             count+=1;
-        if(str(email['to']).count(",") == 0):
-            if (first_dot_lastName in str(email['to']) or cLast_name in str(email['to'])):
-                print("%d. <%s>" %(count +1, email['to']))
-                count+=1;
+            email_num+=1;
             
-        #and re.match(search_clean[1], str(email['from'])) ):
 
+def unique_email(found_email,email_list):
+    if found_email not in email_list:
+        email_list.append(found_email)
 
-
-
-
-# Function obtain all the emails exchanged by two people
+#Function obtain all the emails exchanged by two people
 # regardless of who initiated the communication in the first place
 # This is accomplished by compare the from and to header of each mbox mailbox
 # if from is match with the first email and to is matched with the second and vice versa, output on the screen
